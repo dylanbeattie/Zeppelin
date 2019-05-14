@@ -8,7 +8,7 @@ namespace Zeppelin {
             var source = File.ReadAllText("program.zep");
             var parser = new Parsers.Parser();
             var result = parser.Parse(source);
-            Console.WriteLine(result);
+            Console.WriteLine(result.PrettyPrint());
         }
     }
 }
