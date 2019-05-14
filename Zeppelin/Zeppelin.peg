@@ -1,5 +1,11 @@
 // Zeppelin.peg : parsing expression grammar for Zeppelin
 
-output<OutputNode> = 'say ' n:number { new OutputNode(n) }
+output<OutputNode> = 'say' _ n:number { new OutputNode(n) }
 
 number<NumberNode> = n:("" [0-9]+) { new NumberNode(decimal.Parse(n)) }
+
+whitespace = [\t ]
+_ = whitespace+
+
+EOL = '\n'
+EOF = !.
