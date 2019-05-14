@@ -1,5 +1,11 @@
 // Zeppelin.peg : parsing expression grammar for Zeppelin
 
+block<BlockNode>
+    = head:statement EOL tail:block { new BlockNode(head).Concat(tail) }
+    / line:statement { new BlockNode(line) }
+
+statement = output
+
 output<OutputNode> = 'say' _ n:number { new OutputNode(n) }
 
 number<NumberNode> = n:("" [0-9]+) { new NumberNode(decimal.Parse(n)) }
