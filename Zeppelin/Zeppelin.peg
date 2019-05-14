@@ -1,0 +1,3 @@
+// Zeppelin.peg : parsing expression grammar for Zeppelin
+
+number<NumberNode> = n:("" [0-9]+) { new NumberNode(decimal.Parse(n)) }
