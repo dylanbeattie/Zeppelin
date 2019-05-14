@@ -9,8 +9,19 @@ namespace Zeppelin {
                 case NumberNode n: return n.Value;
                 case OutputNode o: return Output(o);
                 case BlockNode b: return Block(b);
+                case AdditionNode a: return Addition(a);
             }
             throw (new Exception($"Unrecognised node type {node.GetType()}"));
+        }
+
+        public object Addition(AdditionNode a) {
+            var lhs = Evaluate(a.Lhs);
+            var rhs = Evaluate(a.Rhs);
+            if (lhs is decimal && rhs is decimal) {
+                return (decimal)lhs + (decimal)rhs;
+            }
+            throw (new Exception($"I can't add {lhs.GetType()} and {rhs.GetType()}"));
+
         }
 
         public object Block(BlockNode b) {
@@ -20,7 +31,7 @@ namespace Zeppelin {
         }
 
         public object Output(OutputNode o) {
-            var result = Evaluate(o.Number);
+            var result = Evaluate(o.Expression);
             Console.WriteLine(result);
             return result;
         }
