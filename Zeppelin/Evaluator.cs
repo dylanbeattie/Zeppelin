@@ -10,8 +10,18 @@ namespace Zeppelin {
                 case OutputNode o: return Output(o);
                 case BlockNode b: return Block(b);
                 case AdditionNode a: return Addition(a);
+                case ProductNode p: return Product(p);
             }
             throw (new Exception($"Unrecognised node type {node.GetType()}"));
+        }
+
+        private object Product(ProductNode p) {
+            var lhs = Evaluate(p.Lhs);
+            var rhs = Evaluate(p.Rhs);
+            if (lhs is decimal && rhs is decimal) {
+                return (decimal)lhs * (decimal)rhs;
+            }
+            throw (new Exception($"I can't multiply {lhs.GetType()} and {rhs.GetType()}"));
         }
 
         public object Addition(AdditionNode a) {

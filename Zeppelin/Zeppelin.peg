@@ -11,8 +11,12 @@ statement = output
 output<OutputNode> = 'say' _ e:expression { new OutputNode(e) }
 
 expression<SyntaxNode> 
-    = addition
+    = product
 
+product<SyntaxNode>
+    = lhs:addition _ '*' _ rhs:product { new ProductNode(lhs,rhs) }
+    / addition
+    
 addition<SyntaxNode> 
     = lhs:number _ '+' _ rhs:addition { new AdditionNode(lhs, rhs) }
     / number 
