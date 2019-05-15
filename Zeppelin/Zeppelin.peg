@@ -11,8 +11,11 @@ statement = output
 output<OutputNode> = 'say' _ e:expression { new OutputNode(e) }
 
 expression<SyntaxNode> 
-    = lhs:number _ '+' _ rhs:number { new AdditionNode(lhs, rhs) } 
-    / number
+    = addition
+
+addition<SyntaxNode> 
+    = lhs:number _ '+' _ rhs:addition { new AdditionNode(lhs, rhs) }
+    / number 
 
 number<NumberNode> = n:("" [0-9]+) { new NumberNode(decimal.Parse(n)) }
 
