@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +19,12 @@ public abstract class SyntaxNode {
     public virtual void Render(StringBuilder sb, string padding = "") {
         sb.Append(padding).AppendLine(this.ToString());
         var listProperties = GetType().GetProperties()
-            .Where(p => typeof(IList<SyntaxNode>).IsAssignableFrom(p.PropertyType));
+            .Where(p => typeof(IList).IsAssignableFrom(p.PropertyType));
         foreach (var prop in listProperties) {
-            var list = (IList<SyntaxNode>)prop.GetValue(this);
-            foreach (var item in list) item.Render(sb, padding + "  ");
+            var list = (IList)prop.GetValue(this);
+            foreach (var item in list) {
+                if (item is SyntaxNode) ((SyntaxNode)item).Render(sb, padding + "  ");
+            }
         }
         var nodeProperties = GetType().GetProperties().Where(p => typeof(SyntaxNode).IsAssignableFrom(p.PropertyType));
         foreach (var prop in nodeProperties) ((SyntaxNode)prop.GetValue(this)).Render(sb, padding + "  ");
