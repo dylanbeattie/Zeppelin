@@ -6,7 +6,14 @@ block<BlockNode>
     = head:statement EOL tail:block { new BlockNode(head).Concat(tail) }
     / line:statement { new BlockNode(line) }
 
-statement = output
+statement<SyntaxNode> = assignment / output
+
+assignment<AssignNode> 
+    = 'let' _ v:variable _ 'be' _ e:expression
+        { new AssignNode(v, e) }
+
+variable<VariableNode>
+    = name:("" [A-Za-z]+) { new VariableNode(name) }
 
 output<OutputNode> = 'say' _ e:expression { new OutputNode(e) }
 
@@ -14,12 +21,18 @@ expression<SyntaxNode>
     = product
 
 product<SyntaxNode>
-    = lhs:addition _ '*' _ rhs:product { new ProductNode(lhs,rhs) }
+    = lhs:addition _ '*' _ rhs:product 
+        { new BinaryNode(Operator.Multiply, lhs,rhs) }
     / addition
     
 addition<SyntaxNode> 
-    = lhs:number _ '+' _ rhs:addition { new AdditionNode(lhs, rhs) }
-    / number 
+    = lhs:value _ '+' _ rhs:addition 
+        { new BinaryNode(Operator.Add, lhs, rhs) }
+    / value 
+
+value<SyntaxNode> = lookup / number
+
+lookup<LookupNode> = v:variable { new LookupNode(v) }
 
 number<NumberNode> = n:("" [0-9]+) { new NumberNode(decimal.Parse(n)) }
 

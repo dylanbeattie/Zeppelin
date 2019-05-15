@@ -23,7 +23,7 @@ public abstract class SyntaxNode {
             var list = (IList<SyntaxNode>)prop.GetValue(this);
             foreach (var item in list) item.Render(sb, padding + "  ");
         }
-        var nodeProperties = GetType().GetProperties().Where(p => p.PropertyType.IsAssignableFrom(typeof(SyntaxNode)));
+        var nodeProperties = GetType().GetProperties().Where(p => typeof(SyntaxNode).IsAssignableFrom(p.PropertyType));
         foreach (var prop in nodeProperties) ((SyntaxNode)prop.GetValue(this)).Render(sb, padding + "  ");
     }
 }
